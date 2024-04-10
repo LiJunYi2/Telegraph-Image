@@ -9,16 +9,6 @@ export async function onRequest(context) {  // Contents of context object
      } = context;
      context.request
      const url = new URL(request.url);
-    // 从环境变量中获取允许的来源域名列表，并转换成数组
-    const allowedReferers = env.REFERER_URL.split(',');
-
-    // 获取请求的Referer头部
-    const refererHeader = request.headers.get('Referer');
-    // 检查Referer是否在允许的列表中
-    if (!referer || !allowedReferers.some(allowedReferer => referer.startsWith(allowedReferer))) {
-        // 如果Referer不符合预期，返回403 Forbidden或重定向到错误页面
-        return new Response('Access denied', { status: 403 });
-    }
     
     const response = fetch('https://telegra.ph/' + url.pathname + url.search, {
          method: request.method,
