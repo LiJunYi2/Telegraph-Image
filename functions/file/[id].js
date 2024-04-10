@@ -14,23 +14,9 @@ export async function onRequest(context) {  // Contents of context object
 
     // 获取请求的Referer头部
     const refererHeader = request.headers.get('Referer');
-    if (refererHeader) {
-        const refererUrl = new URL(refererHeader);
-        // 提取Referer的一级域名
-        const refererDomain = refererUrl.hostname.split('.').slice(-2).join('.');
-
-        // 检查Referer的一级域名是否在允许的列表中
-        const isAllowed = allowedReferers.some(allowedReferer => {
-            const allowedDomain = allowedReferer.trim().split('.').slice(-2).join('.');
-            return refererDomain === allowedDomain;
-        });
-
-        if (!isAllowed) {
-            // 如果Referer不符合预期，返回403 Forbidden或重定向到错误页面
-            return new Response('Access denied', { status: 403 });
-        }
-    } else {
-        // 如果没有Referer或Referer不符合预期
+    // 检查Referer是否在允许的列表中
+    if (!referer || !allowedReferers.some(allowedReferer => referer.startsWith(allowedReferer))) {
+        // 如果Referer不符合预期，返回403 Forbidden或重定向到错误页面
         return new Response('Access denied', { status: 403 });
     }
     
